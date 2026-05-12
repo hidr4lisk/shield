@@ -64,9 +64,9 @@ try {
   console.error('[shield] módulo diceware no disponible:', err);
 }
 
-// Inicializar módulo 4 — sin dependencias npm, servido directamente
+// Inicializar módulo 4 — bundle separado (reusa el analyzer de strength)
 try {
-  const { init: initAttack } = await import('./modules/attack-scenarios/index.js');
+  const { init: initAttack } = await import('../dist/modules/attack-scenarios/index.js');
   initAttack(document.getElementById('attack'), {
     lang:    getLang(),
     strings: getStrings(),

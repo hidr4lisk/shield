@@ -1,6 +1,7 @@
 // Módulo 4: Attack Scenarios Visualizer
-// Muestra cuánto tarda romper la misma password según el backend de hashing.
-// Fórmula: tiempo = (2^entropía) / hashes_por_segundo / 2 (espacio promedio de búsqueda).
+// Usa zxcvbn-ts (vía src/modules/strength/analyzer.js) para estimar `guesses`
+// reales — modela ataques con diccionarios y patrones, no entropía Shannon.
+// Fórmula: tiempo = guesses / hashes_por_segundo.
 
 const AUTO_CLEAR_SECS = 60;
 
@@ -12,29 +13,27 @@ const SCENARIOS = {
 };
 
 // Para la barra: log10 del tiempo en segundos, normalizado.
-// 0s = 0%, ~10^17s (edad del universo en segundos) = 100%
+// 0s = 0%, ~10^17s (edad del universo) = 100%
 const MAX_LOG_SECS = 17;
 
 let _lang      = 'es';
 let _strings   = {};
+let _analyzer  = null;
+let _analyzing = false;
 let _countId   = null;
 let _remaining = AUTO_CLEAR_SECS;
+let _debounce  = null;
 
 function s(key, fallback) {
   return _strings[key] ?? fallback;
 }
 
-// ── Entropía naive por charset ────────────────────────────────────────
+// ── Analyzer lazy load ────────────────────────────────────────────────
 
-function estimateEntropy(pw) {
-  if (!pw) return 0;
-  let charset = 0;
-  if (/[a-z]/.test(pw)) charset += 26;
-  if (/[A-Z]/.test(pw)) charset += 26;
-  if (/[0-9]/.test(pw)) charset += 10;
-  if (/[^a-zA-Z0-9]/.test(pw)) charset += 32;
-  if (charset === 0) return 0;
-  return pw.length * Math.log2(charset);
+async function ensureAnalyzer() {
+  if (_analyzer) return;
+  _analyzer = await import('../strength/analyzer.js');
+  _analyzer.configure(_lang);
 }
 
 // ── Formateo de tiempo ────────────────────────────────────────────────
@@ -54,13 +53,11 @@ function formatTime(secs) {
   return s('m4_unit_universe', '> edad del universo');
 }
 
-// Tiempo en segundos para crackear, dado entropía y throughput
-function crackSecs(entropy, hps) {
-  if (entropy <= 0) return 0;
-  return Math.pow(2, entropy) / hps / 2;
+function crackSecs(guesses, hps) {
+  if (!guesses || guesses <= 1) return 0;
+  return guesses / hps;
 }
 
-// Color del bar según seguridad relativa (segundos)
 function barColor(secs) {
   if (secs < 60)        return 'var(--danger)';
   if (secs < 86400)     return '#ff8800';
@@ -68,7 +65,6 @@ function barColor(secs) {
   return 'var(--accent)';
 }
 
-// % del bar (log scale)
 function barPct(secs) {
   if (secs <= 0) return 0;
   const logSecs = Math.log10(Math.max(secs, 1));
@@ -85,13 +81,17 @@ function buildTemplate() {
            autocapitalize="off" autocorrect="off" spellcheck="false"
            placeholder="${s('m4_placeholder', 'Ingresá una contraseña...')}"
            aria-label="${s('m4_input_aria', 'Contraseña para evaluar escenarios')}">
-    <button type="button" class="s1-vis-btn m4-vis-btn"
+    <button type="button" class="m4-vis-btn"
             aria-label="${s('m4_show_pass', 'Mostrar contraseña')}" aria-pressed="false">
       <span class="m4-vis-icon" aria-hidden="true">◉</span>
     </button>
   </div>
 
-  <p class="m4-hint">${s('m4_hint', 'Escribí una contraseña para ver cuánto tarda romperla según el backend.')}</p>
+  <p class="m4-hint">${s('m4_hint', 'Escribí una contraseña para ver cuánto tarda romperla según el backend de hashing.')}</p>
+
+  <p class="m4-loading hidden vt323" role="status" aria-live="polite">
+    ${s('m4_loading', 'CARGANDO_ANALIZADOR...')}<span class="cursor">_</span>
+  </p>
 
   <div class="m4-result hidden" aria-live="polite" aria-atomic="true">
 
@@ -138,7 +138,7 @@ function buildTemplate() {
     </div>
 
     <div class="m4-explainer">
-      <p>${s('m4_explainer', 'La misma contraseña puede tardar siglos o minutos en romperse según cómo el servicio guarde tu hash. Por eso importa elegir servicios que usen bcrypt, scrypt o argon2 — no MD5 ni SHA-1 sin salt.')}</p>
+      <p>${s('m4_explainer', 'La estimación usa zxcvbn — modela ataques con diccionarios y patrones reales (palabras de diccionario + dígitos, sustituciones l33t, etc), no entropía teórica. Por eso "Avion19" cae en horas contra bcrypt aunque "parezca" tener 40 bits.')}</p>
     </div>
 
     <div class="m4-autoclear" role="status" aria-live="polite">
@@ -152,23 +152,24 @@ function buildTemplate() {
 
 // ── Render ────────────────────────────────────────────────────────────
 
-function renderResult(section, pw) {
-  const result = section.querySelector('.m4-result');
-  const hint   = section.querySelector('.m4-hint');
+function renderResult(section, result, pw) {
+  const resultDiv = section.querySelector('.m4-result');
+  const hint      = section.querySelector('.m4-hint');
 
   if (!pw) {
-    result.classList.add('hidden');
+    resultDiv.classList.add('hidden');
     hint.classList.remove('hidden');
     return;
   }
 
-  const entropy = estimateEntropy(pw);
-  const tOnline = crackSecs(entropy, SCENARIOS.online);
-  const tBcrypt = crackSecs(entropy, SCENARIOS.bcrypt);
-  const tMd5    = crackSecs(entropy, SCENARIOS.md5);
+  const guesses = Math.max(result.guesses || 1, 1);
+  const entropyBits = Math.log2(guesses);
+  const tOnline = crackSecs(guesses, SCENARIOS.online);
+  const tBcrypt = crackSecs(guesses, SCENARIOS.bcrypt);
+  const tMd5    = crackSecs(guesses, SCENARIOS.md5);
 
   section.querySelector('.m4-len').textContent = pw.length;
-  section.querySelector('.m4-ent').textContent = `~${Math.round(entropy)} bits`;
+  section.querySelector('.m4-ent').textContent = `~${Math.round(entropyBits)} bits`;
 
   const setBar = (timeSel, fillSel, secs) => {
     section.querySelector(timeSel).textContent = formatTime(secs);
@@ -182,7 +183,12 @@ function renderResult(section, pw) {
   setBar('.m4-t-md5',    '.m4-fill-md5',    tMd5);
 
   hint.classList.add('hidden');
-  result.classList.remove('hidden');
+  resultDiv.classList.remove('hidden');
+}
+
+function clearResult(section) {
+  section.querySelector('.m4-result').classList.add('hidden');
+  section.querySelector('.m4-hint').classList.remove('hidden');
 }
 
 // ── Auto-clear ────────────────────────────────────────────────────────
@@ -195,7 +201,7 @@ function clearModule(section) {
   visBtn.setAttribute('aria-pressed', 'false');
   visBtn.setAttribute('aria-label', s('m4_show_pass', 'Mostrar contraseña'));
   stopCountdown(section);
-  renderResult(section, '');
+  clearResult(section);
 }
 
 function startCountdown(section) {
@@ -229,12 +235,15 @@ function updateAutoclearMsg(section) {
 
 function refreshStrings(section) {
   const q = sel => section.querySelector(sel);
-  if (q('.m4-input'))         q('.m4-input').placeholder       = s('m4_placeholder', 'Ingresá una contraseña...');
-  if (q('.m4-input'))         q('.m4-input').setAttribute('aria-label', s('m4_input_aria', 'Contraseña para evaluar escenarios'));
-  if (q('.m4-hint'))          q('.m4-hint').textContent        = s('m4_hint', 'Escribí una contraseña para ver cuánto tarda romperla según el backend.');
-  if (q('.m4-sc-title'))      q('.m4-sc-title').textContent    = s('m4_sc_title', '// TIEMPO ESTIMADO PARA CRACKEAR');
+  if (q('.m4-input')) {
+    q('.m4-input').placeholder = s('m4_placeholder', 'Ingresá una contraseña...');
+    q('.m4-input').setAttribute('aria-label', s('m4_input_aria', 'Contraseña para evaluar escenarios'));
+  }
+  if (q('.m4-hint'))          q('.m4-hint').textContent          = s('m4_hint', 'Escribí una contraseña para ver cuánto tarda romperla según el backend de hashing.');
+  if (q('.m4-loading'))       q('.m4-loading').firstChild.nodeValue = s('m4_loading', 'CARGANDO_ANALIZADOR...');
+  if (q('.m4-sc-title'))      q('.m4-sc-title').textContent      = s('m4_sc_title', '// TIEMPO ESTIMADO PARA CRACKEAR');
   if (q('.m4-autoclear-btn')) q('.m4-autoclear-btn').textContent = s('m4_autoclear_btn', 'BORRAR YA');
-  if (q('.m4-explainer p'))   q('.m4-explainer p').textContent = s('m4_explainer', 'La misma contraseña puede tardar siglos o minutos en romperse según cómo el servicio guarde tu hash. Por eso importa elegir servicios que usen bcrypt, scrypt o argon2 — no MD5 ni SHA-1 sin salt.');
+  if (q('.m4-explainer p'))   q('.m4-explainer p').textContent   = s('m4_explainer', 'La estimación usa zxcvbn — modela ataques con diccionarios y patrones reales, no entropía teórica.');
 
   const metaKeys = section.querySelectorAll('.m4-meta-k');
   const metaTexts = [s('m4_stat_len', 'LONGITUD'), s('m4_stat_ent', 'ENTROPÍA')];
@@ -257,9 +266,10 @@ function refreshStrings(section) {
   scDescs.forEach((el, i) => { el.textContent = descKeys[i]; });
 
   updateAutoclearMsg(section);
-  // Re-render con nuevas unidades si hay valor
+
+  // Re-analizar con nuevo idioma si hay valor
   const pw = section.querySelector('.m4-input')?.value;
-  if (pw) renderResult(section, pw);
+  if (pw && _analyzer) renderResult(section, _analyzer.analyze(pw), pw);
 }
 
 // ── Init ──────────────────────────────────────────────────────────────
@@ -275,15 +285,39 @@ export function init(section, { lang = 'es', strings = {} } = {}) {
     section.insertAdjacentHTML('beforeend', buildTemplate());
   }
 
-  const input  = section.querySelector('.m4-input');
-  const visBtn = section.querySelector('.m4-vis-btn');
-  const acBtn  = section.querySelector('.m4-autoclear-btn');
+  const input   = section.querySelector('.m4-input');
+  const visBtn  = section.querySelector('.m4-vis-btn');
+  const acBtn   = section.querySelector('.m4-autoclear-btn');
+  const loading = section.querySelector('.m4-loading');
+  const hint    = section.querySelector('.m4-hint');
 
-  input.addEventListener('input', () => {
+  input.addEventListener('input', async () => {
     const pw = input.value;
-    renderResult(section, pw);
-    if (pw) startCountdown(section);
-    else    stopCountdown(section);
+
+    if (!pw) {
+      clearResult(section);
+      stopCountdown(section);
+      return;
+    }
+
+    startCountdown(section);
+
+    if (!_analyzer && !_analyzing) {
+      _analyzing = true;
+      hint.classList.add('hidden');
+      loading.classList.remove('hidden');
+      await ensureAnalyzer();
+      loading.classList.add('hidden');
+      _analyzing = false;
+    }
+
+    if (!_analyzer) return;
+
+    clearTimeout(_debounce);
+    _debounce = setTimeout(() => {
+      const result = _analyzer.analyze(pw);
+      renderResult(section, result, pw);
+    }, 120);
   });
 
   visBtn.addEventListener('click', () => {
@@ -296,9 +330,15 @@ export function init(section, { lang = 'es', strings = {} } = {}) {
 
   acBtn.addEventListener('click', () => clearModule(section));
 
-  document.addEventListener('shield:langchange', e => {
+  document.addEventListener('shield:langchange', async e => {
     _lang    = e.detail.lang;
     _strings = e.detail.strings;
     refreshStrings(section);
+
+    if (_analyzer) {
+      _analyzer.configure(e.detail.lang);
+      const pw = input.value;
+      if (pw) renderResult(section, _analyzer.analyze(pw), pw);
+    }
   });
 }

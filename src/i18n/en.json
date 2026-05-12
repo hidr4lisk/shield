@@ -100,6 +100,7 @@
   "m4_show_pass": "Show password",
   "m4_hide_pass": "Hide password",
   "m4_hint": "Type a password to see how long it takes to crack based on the hashing backend.",
+  "m4_loading": "LOADING_ANALYZER...",
   "m4_stat_len": "LENGTH",
   "m4_stat_ent": "ENTROPY",
   "m4_sc_title": "// ESTIMATED TIME TO CRACK",
@@ -115,7 +116,7 @@
   "m4_unit_days": "days",
   "m4_unit_years": "years",
   "m4_unit_universe": "> age of the universe",
-  "m4_explainer": "The same password can take centuries or minutes to crack depending on how the service stores your hash. That's why it matters to choose services that use bcrypt, scrypt or argon2 — not MD5 or unsalted SHA-1.",
+  "m4_explainer": "Estimates use zxcvbn — it models real dictionary and pattern attacks (words + digits, l33t substitutions, etc), not theoretical entropy. That's why \"Avion19\" cracks in hours against bcrypt even though it \"looks like\" 40 bits. The same password takes centuries or seconds depending on the hashing backend.",
   "m4_autoclear_msg": "Clearing in {n}s",
   "m4_autoclear_btn": "CLEAR NOW",
 

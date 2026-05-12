@@ -20,7 +20,7 @@ El principio guía es **privacidad auditable, no privacidad declarada**. Cada de
 | 01 | **Password Strength** | Análisis de fortaleza con zxcvbn-ts + wordlist propia del Cono Sur (clubes, jugadores, patrones comunes en español). Entropía, warnings y sugerencias reales — no solo un número. |
 | 02 | **Breach Check** | Verifica si una contraseña fue filtrada usando k-anonymity contra la API de HaveIBeenPwned. Solo se envían los primeros 5 chars del hash SHA-1 — la contraseña completa nunca sale del navegador. |
 | 03 | **Diceware Generator** | Genera passphrases usando el método Diceware de la EFF (7776 palabras, `crypto.getRandomValues()`). Muestra la tirada de dados real, entropía y tiempo estimado de ruptura. |
-| 04 | **Attack Scenarios** | Visualiza cuánto tarda la misma contraseña en romperse en tres escenarios: login online con rate limit (10/s), backend con hash bcrypt moderno (1K/s en GPU), y MD5 sin salt en un rig de varias GPUs (100B/s). |
+| 04 | **Attack Scenarios** | Visualiza cuánto tarda la misma contraseña en romperse en tres escenarios: login online con rate limit (10/s), backend con hash bcrypt moderno (1K/s en GPU), y MD5 sin salt en un rig de varias GPUs (100B/s). Usa la estimación de `guesses` de zxcvbn-ts — modela ataques con diccionarios y patrones, no entropía de charset. |
 
 ## Privacidad
 

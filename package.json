@@ -5,7 +5,7 @@
   "scripts": {
     "build":     "npm run build:css && npm run build:js",
     "build:css": "tailwindcss -i src/styles/main.css -o dist/styles.css --minify",
-    "build:js":  "esbuild src/modules/strength/index.js --bundle --minify --format=esm --splitting --outdir=dist/modules/strength && esbuild src/modules/diceware/index.js --bundle --minify --format=esm --splitting --outdir=dist/modules/diceware",
+    "build:js":  "esbuild src/modules/strength/index.js --bundle --minify --format=esm --splitting --outdir=dist/modules/strength && esbuild src/modules/diceware/index.js --bundle --minify --format=esm --splitting --outdir=dist/modules/diceware && esbuild src/modules/attack-scenarios/index.js --bundle --minify --format=esm --splitting --outdir=dist/modules/attack-scenarios",
     "dev:css":   "tailwindcss -i src/styles/main.css -o dist/styles.css --watch",
     "dev:js":    "esbuild src/modules/strength/index.js --bundle --format=esm --sourcemap --splitting --outdir=dist/modules/strength --watch"
   },

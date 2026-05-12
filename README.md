@@ -20,7 +20,7 @@ The whole point is **auditable privacy, not declared privacy**. Every technical 
 | 01 | **Password Strength** | Strength analysis with zxcvbn-ts plus a custom wordlist for the Southern Cone (clubs, players, common patterns in Spanish). Returns entropy, warnings and real suggestions — not just a number. |
 | 02 | **Breach Check** | Checks if a password was leaked using k-anonymity against the HaveIBeenPwned API. The server only sees the first 5 chars of the SHA-1 hash — the full password never leaves the browser. |
 | 03 | **Diceware Generator** | Generates passphrases using the EFF Diceware method (7776 words, `crypto.getRandomValues()`). Shows the actual dice rolls, entropy and estimated crack time. |
-| 04 | **Attack Scenarios** | Visualizes how long the same password would take to crack across three scenarios: rate-limited online login (10/s), modern bcrypt hash on GPU (1K/s), and unsalted MD5 on a multi-GPU rig (100B/s). |
+| 04 | **Attack Scenarios** | Visualizes how long the same password would take to crack across three scenarios: rate-limited online login (10/s), modern bcrypt hash on GPU (1K/s), and unsalted MD5 on a multi-GPU rig (100B/s). Uses zxcvbn-ts guess estimation — accounts for dictionary attacks and patterns, not just charset entropy. |
 
 ## Privacy
 
