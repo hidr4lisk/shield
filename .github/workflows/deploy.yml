@@ -38,7 +38,7 @@ jobs:
           cp -r src/core _deploy/src/
           cp -r src/i18n _deploy/src/
           cp -r src/modules/pwned _deploy/src/modules/
-          cp -r public _deploy/
+          cp -r public _deploy/ 2>/dev/null || true
           touch _deploy/.nojekyll
 
       - name: Inject commit hash
