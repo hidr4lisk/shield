@@ -64,7 +64,7 @@
   "m2_diag_prefix": "AAAAA",
   "m2_diag_compare": "is AAAAAB1C2... there?",
   "m2_diag_list": "~800 hashes",
-  "m2_kanon_footer": "The server only sees \"AAAAA\". Your password stays anonymous among hundreds of hashes. That's k-anonymity."
+  "m2_kanon_footer": "The server only sees \"AAAAA\". Your password stays anonymous among hundreds of hashes. That's k-anonymity.",
 
   "m3_num": "// 03",
   "m3_title": "DICEWARE_GENERATOR",
@@ -89,7 +89,7 @@
   "m3_unit_min": "min",
   "m3_unit_h": "h",
   "m3_unit_days": "days",
-  "m3_unit_years": "years"
+  "m3_unit_years": "years",
 
   "m4_num": "// 04",
   "m4_title": "ATTACK_SCENARIOS",
