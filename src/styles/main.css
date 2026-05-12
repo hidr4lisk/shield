@@ -1456,6 +1456,196 @@ footer {
   .cursor     { animation: none; opacity: 1; }
 }
 
+/* ── Módulo 4: Attack Scenarios ─────────────────────────────────────── */
+
+.m4 {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+
+.m4-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.m4-input-wrap .cyber-input {
+  width: 100%;
+  padding-right: 44px;
+  font-family: var(--font-mono);
+  font-size: var(--t-base);
+}
+
+.m4-vis-btn {
+  position: absolute;
+  right: var(--s-2);
+  background: none;
+  border: none;
+  color: var(--text-tertiary);
+  font-size: var(--t-base);
+  cursor: pointer;
+  padding: var(--s-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--dur-fast);
+}
+@media (hover: hover) { .m4-vis-btn:hover { color: var(--accent); } }
+.m4-vis-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.m4-hint {
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  color: var(--text-disabled);
+  letter-spacing: 0.08em;
+  padding: var(--s-2) 0;
+}
+
+.m4-meta {
+  display: flex;
+  gap: var(--s-6);
+  padding: var(--s-3) 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.m4-meta-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.m4-meta-k {
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  color: var(--text-disabled);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.m4-meta-v {
+  font-family: var(--font-mono);
+  font-size: var(--t-base);
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.m4-scenarios {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+
+.m4-sc-title {
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  color: var(--accent-dim);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.m4-scenario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.m4-sc-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+
+.m4-sc-label {
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  color: var(--text-tertiary);
+  letter-spacing: 0.1em;
+}
+
+.m4-sc-val {
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.m4-sc-bar {
+  height: 6px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-2);
+  overflow: hidden;
+}
+
+.m4-sc-fill {
+  height: 100%;
+  width: 0;
+  border-radius: var(--r-2);
+  transition: width var(--dur-slow) var(--ease-out), background var(--dur-base);
+}
+
+.m4-sc-desc {
+  font-family: var(--font-body);
+  font-size: var(--t-xs);
+  color: var(--text-disabled);
+  line-height: 1.5;
+}
+
+.m4-explainer {
+  border-left: 2px solid var(--accent-dim);
+  background: var(--accent-soft);
+  padding: var(--s-3) var(--s-4);
+}
+
+.m4-explainer p {
+  font-family: var(--font-body);
+  font-size: var(--t-sm);
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.m4-autoclear {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  border: 1px solid var(--border-subtle);
+  border-top: 2px solid var(--text-disabled);
+  background: var(--bg-surface);
+  padding: var(--s-3) var(--s-4);
+}
+
+.m4-autoclear-msg {
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  color: var(--text-tertiary);
+  letter-spacing: 0.1em;
+}
+
+.m4-autoclear-btn {
+  background: none;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-tertiary);
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  padding: 3px 10px;
+  cursor: pointer;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  min-height: 28px;
+  transition: border-color var(--dur-fast), color var(--dur-fast);
+}
+@media (hover: hover) { .m4-autoclear-btn:hover { border-color: var(--danger); color: var(--danger); } }
+.m4-autoclear-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+@media (max-width: 480px) {
+  .m4-meta { gap: var(--s-4); flex-wrap: wrap; }
+  .m4-sc-head { flex-direction: column; align-items: flex-start; gap: 2px; }
+}
+
 /* ── Helpers responsive ─────────────────────────────────────────────── */
 @media (max-width: 499px) { .hide-xs { display: none; } }
 @media (max-width: 639px) { .hide-sm { display: none; } }
