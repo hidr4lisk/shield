@@ -213,10 +213,7 @@ p, li { font-family: var(--font-body); }
   border-bottom: 1px solid var(--border-default);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  overflow-x: auto;
-  scrollbar-width: none;
 }
-.module-nav::-webkit-scrollbar { display: none; }
 
 .module-nav__inner {
   max-width: var(--max-width);
@@ -251,6 +248,12 @@ p, li { font-family: var(--font-body); }
 .module-nav__num {
   font-size: var(--t-sm);
   opacity: 0.6;
+}
+
+@media (max-width: 639px) {
+  .module-nav__inner { padding-inline: 0; }
+  .module-nav__item  { flex: 1; justify-content: center; padding-inline: var(--s-1); font-size: 0.62rem; letter-spacing: 0.06em; gap: 0; }
+  .module-nav__num   { display: none; }
 }
 
 /* ── Page wrapper ───────────────────────────────────────────────────── */
