@@ -3,6 +3,10 @@ import { initI18n, setLang, getLang, getStrings } from './core/i18n.js';
 // Inicializar idioma (detecta localStorage → navigator.language → ES)
 await initI18n();
 
+// Navegación entre herramientas
+const toolSelect = document.querySelector('.tool-select');
+if (toolSelect) toolSelect.addEventListener('change', () => { window.location.href = toolSelect.value; });
+
 // Botones de cambio de idioma en el top bar
 document.querySelectorAll('.lang-btn').forEach(btn => {
   btn.addEventListener('click', () => setLang(btn.dataset.lang));
