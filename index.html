@@ -43,12 +43,11 @@
   <div class="top-bar" role="banner">
     <div class="top-bar__inner">
       <div class="top-bar__left">
-        <span class="status-dot" aria-label="Sistema activo"></span>
-        <span class="top-bar__brand"><span class="top-bar__brand-prefix">Hidr4lisk_</span><span class="top-bar__brand-tool">SHIELD</span></span>
         <nav class="tool-nav" aria-label="Hidr4lisk tools">
-          <span class="top-bar__sep" aria-hidden="true">|</span>
           <a href="https://hidr4lisk.github.io/warp" class="tool-nav__btn">WARP</a>
-          <span class="top-bar__sep" aria-hidden="true">|</span>
+          <span class="top-bar__sep" aria-hidden="true">/</span>
+          <a href="https://hidr4lisk.github.io/shield" class="tool-nav__btn active" aria-current="page">SHIELD</a>
+          <span class="top-bar__sep" aria-hidden="true">/</span>
           <a href="https://hidr4lisk.github.io/tech" class="tool-nav__btn">TECH</a>
         </nav>
       </div>
@@ -196,10 +195,10 @@
         <div class="footer__col">
           <p class="footer__label" data-i18n="footer_build_label">// BUILD</p>
           <!--
-            f4422d5 es reemplazado por GitHub Actions con el SHA corto del commit.
+            aa6faf9 es reemplazado por GitHub Actions con el SHA corto del commit.
             Ver .github/workflows/deploy.yml
           -->
-          <p class="footer__status vt323">commit: <span id="build-hash">f4422d5</span></p>
+          <p class="footer__status vt323">commit: <span id="build-hash">aa6faf9</span></p>
           <a href="https://github.com/hidr4lisk/shield/blob/main/src/modules/pwned/index.js"
              target="_blank" rel="noopener"
              class="footer__link" data-i18n="footer_hibp_link">→ ver llamada HIBP en el código</a>
