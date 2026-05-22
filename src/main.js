@@ -78,3 +78,21 @@ try {
 } catch (err) {
   console.error('[shield] módulo attack-scenarios no disponible:', err);
 }
+
+(function(){
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const el = document.querySelector('.hero__title');
+  if (!el) return;
+  const orig = el.textContent;
+  const chars = '!@#$%^&*<>[]{}01';
+  let frame = 0;
+  const total = 40;
+  const id = setInterval(() => {
+    el.textContent = [...orig].map((ch, i) => {
+      const lockAt = Math.floor((i / orig.length) * total * 0.75);
+      return frame > lockAt ? ch : chars[Math.floor(Math.random() * chars.length)];
+    }).join('');
+    if (++frame >= total) { clearInterval(id); el.textContent = orig; }
+  }, 50);
+  setTimeout(() => { const ov = document.getElementById('glitch-overlay'); if (ov) ov.remove(); }, 2100);
+})();
