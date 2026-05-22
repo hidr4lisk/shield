@@ -44,11 +44,14 @@
     <div class="top-bar__inner">
       <div class="top-bar__left">
         <span class="status-dot" aria-label="Sistema activo"></span>
-        <span class="top-bar__brand">Hidr4lisk_Shield</span>
-        <span class="top-bar__sep hide-xs" aria-hidden="true">//</span>
-        <span class="top-bar__tagline hide-xs" data-i18n="topbar_tagline">CREDENTIAL_SECURITY_LAB</span>
+        <span class="top-bar__brand"><span class="top-bar__brand-prefix">Hidr4lisk_</span><span class="top-bar__brand-tool">SHIELD</span></span>
       </div>
       <div class="top-bar__right">
+        <nav class="tool-nav" aria-label="Hidr4lisk tools">
+          <a href="https://hidr4lisk.github.io/warp" class="tool-nav__btn">WARP</a>
+          <a href="https://hidr4lisk.github.io/tech" class="tool-nav__btn">TECH</a>
+        </nav>
+        <span class="top-bar__sep" aria-hidden="true">|</span>
         <nav class="lang-toggle" aria-label="Selector de idioma">
           <button class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
           <span class="lang-sep" aria-hidden="true">/</span>
@@ -192,10 +195,10 @@
         <div class="footer__col">
           <p class="footer__label" data-i18n="footer_build_label">// BUILD</p>
           <!--
-            edbfaca es reemplazado por GitHub Actions con el SHA corto del commit.
+            d9f3548 es reemplazado por GitHub Actions con el SHA corto del commit.
             Ver .github/workflows/deploy.yml
           -->
-          <p class="footer__status vt323">commit: <span id="build-hash">edbfaca</span></p>
+          <p class="footer__status vt323">commit: <span id="build-hash">d9f3548</span></p>
           <a href="https://github.com/hidr4lisk/shield/blob/main/src/modules/pwned/index.js"
              target="_blank" rel="noopener"
              class="footer__link" data-i18n="footer_hibp_link">→ ver llamada HIBP en el código</a>
