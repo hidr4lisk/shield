@@ -5,8 +5,8 @@ const SCORE_META = [
   { es: 'MUY_DÉBIL',  en: 'VERY_WEAK',   color: '#ff003c', pct: 10 },
   { es: 'DÉBIL',      en: 'WEAK',         color: '#ff6b2b', pct: 28 },
   { es: 'REGULAR',    en: 'FAIR',         color: '#ffd700', pct: 52 },
-  { es: 'FUERTE',     en: 'STRONG',       color: '#8fb800', pct: 78 },
-  { es: 'MUY_FUERTE', en: 'VERY_STRONG',  color: '#c4ff00', pct: 100 },
+  { es: 'FUERTE',     en: 'STRONG',       color: '#7f9e8f', pct: 78 },
+  { es: 'MUY_FUERTE', en: 'VERY_STRONG',  color: '#98B4A6', pct: 100 },
 ];
 
 const AUTO_CLEAR_SECS = 30;
