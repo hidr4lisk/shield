@@ -230,7 +230,7 @@ p, li { font-family: var(--font-body); }
 
 .tool-nav__btn--brand { text-transform: none; }
 
-.tool-select {
+.tool-select { min-width: 150px;
   appearance: none;
   -webkit-appearance: none;
   background-color: transparent;
