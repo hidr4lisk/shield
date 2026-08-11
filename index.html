@@ -13,8 +13,8 @@
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
     connect-src 'self' https://api.pwnedpasswords.com;
-    style-src   'self' https://fonts.googleapis.com;
-    font-src    'self' https://fonts.gstatic.com;
+    style-src   'self';
+    font-src    'self';
     script-src  'self';
     img-src     'self' data:;
     object-src  'none';
@@ -25,15 +25,19 @@
   <title>Hidr4lisk_Shield // Credential Security Lab</title>
 
   <!--
-    Google Fonts: JetBrains Mono, Major Mono Display, VT323, Inter
-    SRI no disponible para Google Fonts (respuestas dinámicas).
-    Alternativa self-hosted documentada en paso 6 del roadmap.
+    Fuentes self-hosted en hidra-kit/fonts/ (Inter, JetBrains Mono, Major Mono
+    Display, VT323). Antes venían de Google Fonts por CDN — cero CDN externo es
+    regla de la casa (supply-chain + privacidad), y era el pendiente que este
+    mismo bloque anotaba como "paso 6 del roadmap".
   -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700;800&family=Major+Mono+Display&family=VT323&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="dist/styles.css">
+
+  <!-- El kit va DESPUÉS a propósito: pisa los tokens del sitio con la paleta
+       común (Inverse) sin obligar a reescribir main.css. Fuente de verdad en
+       hidralisk (hidra/static/hidra/landing-kit/); se distribuye con
+       scripts/sync-landings.sh. NO editar acá: el sync lo pisa. -->
+  <link rel="stylesheet" href="hidra-kit/kit.css">
 </head>
 <body>
   <div id="glitch-overlay" aria-hidden="true"></div>
